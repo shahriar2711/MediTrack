@@ -8,8 +8,6 @@ connectDB();
 
 const app = express();
 
-const cors = require("cors");
-
 const allowedOrigins = [
   "http://localhost:5173",           // local dev
   "https://meditrack.vercel.app",    // your Vercel URL (update after deploying frontend)
