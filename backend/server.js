@@ -1,56 +1,60 @@
 const express = require("express");
-const dotenv = require("dotenv");
-const connectDB = require("./config/db");
+const mongoose = require("mongoose");
 const cors = require("cors");
-
-dotenv.config();
-connectDB();
+require("dotenv").config();
 
 const app = express();
 
-const allowedOrigins = [
-  "http://localhost:5173",           // local dev
-  "https://medi-track-lake-seven.vercel.app/",    // your Vercel URL (update after deploying frontend)
-  /\.vercel\.app$/                   // any vercel preview URL
-];
-
+// ── CORS — must be FIRST before any routes ────────────────────────────────────
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.some(o =>
-      typeof o === "string" ? o === origin : o.test(origin)
-    )) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://medi-track-lake-seven.vercel.app",  // ← your exact Vercel URL
+    /\.vercel\.app$/,                             // ← covers all preview URLs too
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 }));
+
+// Handle preflight
+app.options("*", cors());
+
+// Body parser
 app.use(express.json());
 
+// Database
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB connected ✅"))
+  .catch((err) => console.error("MongoDB error:", err));
+
+// Health check
 app.get("/", (req, res) => {
-  res.send("API is running...");
+  res.json({ message: "MediTrack API is running ✅" });
+});
+
+// Routes — make sure these file paths match YOUR actual files
+const authRoutes      = require("./routes/authRoutes");
+const doctorRoutes    = require("./routes/doctorRoutes");
+const patientRoutes   = require("./routes/patientRoutes");
+
+app.use("/api/auth",    authRoutes);
+app.use("/api/doctor",  doctorRoutes);
+app.use("/api/patient", patientRoutes);
+
+// /api/protected — put it wherever your protected route handler lives
+// If it's inline in server.js already, keep it there
+// If it's in a separate file:
+// const protectedRoutes = require("./routes/protectedRoutes");
+// app.use("/api", protectedRoutes);
+
+// 404 fallback — helps debug missing routes
+app.use((req, res) => {
+  console.log(`404 → ${req.method} ${req.url}`);
+  res.status(404).json({ message: `Route ${req.method} ${req.url} not found` });
 });
 
 const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
-app.use("/api/auth", require("./routes/authRoutes"));
-
-const { protect, authorizeRoles } = require("./middleware/authMiddleware");
-
-app.get("/api/protected", protect, (req, res) => {
-  res.json({
-    message: "Protected route accessed",
-    user: req.user
-  });
-});
-
-app.use("/api/doctor", require("./routes/doctorRoutes"));
-
-app.use("/api/patient", require("./routes/patientRoutes"));
-
-app.use("/api/prescriptions", require("./routes/prescriptionRoutes"));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
