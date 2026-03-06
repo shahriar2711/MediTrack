@@ -10,7 +10,7 @@ const app = express();
 
 const allowedOrigins = [
   "http://localhost:5173",           // local dev
-  "https://meditrack.vercel.app",    // your Vercel URL (update after deploying frontend)
+  "https://medi-track-lake-seven.vercel.app/",    // your Vercel URL (update after deploying frontend)
   /\.vercel\.app$/                   // any vercel preview URL
 ];
 
