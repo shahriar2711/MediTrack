@@ -19,7 +19,7 @@ app.use(cors({
 }));
 
 // ✅ FIX: "/(.*)" instead of "*" — required for Express 5 + path-to-regexp v8
-app.options("/(.*)", cors());
+app.options(/.*/, cors());
 
 // ── Body parser ───────────────────────────────────────────────────────────────
 app.use(express.json());
