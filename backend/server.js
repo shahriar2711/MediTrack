@@ -18,7 +18,8 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
 
-app.options("*", cors());
+// ✅ FIX: "/(.*)" instead of "*" — required for Express 5 + path-to-regexp v8
+app.options("/(.*)", cors());
 
 // ── Body parser ───────────────────────────────────────────────────────────────
 app.use(express.json());
@@ -35,7 +36,7 @@ app.get("/", (req, res) => {
 });
 
 // ── Middleware ────────────────────────────────────────────────────────────────
-const { protect, authorizeRoles } = require("./middleware/authMiddleware");
+const { protect } = require("./middleware/authMiddleware");
 
 // ── Routes ────────────────────────────────────────────────────────────────────
 const authRoutes    = require("./routes/authRoutes");
@@ -46,9 +47,7 @@ app.use("/api/auth",    authRoutes);
 app.use("/api/doctor",  doctorRoutes);
 app.use("/api/patient", patientRoutes);
 
-// ── Protected route — THIS WAS MISSING ───────────────────────────────────────
-// AuthContext calls GET /api/protected after login to fetch the full user object
-// Without this, login flow breaks with 404 after token is received
+// ── Protected route ───────────────────────────────────────────────────────────
 app.get("/api/protected", protect, (req, res) => {
   res.json({ user: req.user });
 });
