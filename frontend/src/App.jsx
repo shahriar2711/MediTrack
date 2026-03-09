@@ -14,8 +14,9 @@ import Prescriptions from "./pages/Prescriptions";
 import PatientConsultations from "./pages/PatientConsultations";
 import PatientPrescriptions from "./pages/PatientPrescriptions";
 import SearchPatient from "./pages/SearchPatient";
-import MedicationAlerts from "./pages/MedicationAlerts";
-import HealthChatbot from "./pages/HealthChatbot";
+import Medicationalerts from "./pages/Medicationalerts"
+import Healthchatbot from "./pages/Healthchatbot"
+
 
 export default function App() {
   return (
@@ -79,13 +80,13 @@ export default function App() {
 
       <Route path="/patient/medication-alerts" element={
         <ProtectedRoute roles={["patient"]}>
-          <MedicationAlerts />
+          <Medicationalerts />
         </ProtectedRoute>
       } />
 
       <Route path="/patient/chatbot" element={
         <ProtectedRoute roles={["patient"]}>
-          <HealthChatbot />
+          <Healthchatbot />
         </ProtectedRoute>
       } />
 
