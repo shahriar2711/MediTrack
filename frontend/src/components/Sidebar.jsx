@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import {
   LayoutDashboard, ClipboardList, FileText,
-  Search, LogOut, Stethoscope, UserPlus, ShieldCheck,
+  Search, LogOut, Stethoscope, UserPlus, ShieldCheck,Bell, Bot,
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -18,11 +18,13 @@ const Sidebar = () => {
     { to: "/doctor/prescriptions", label: "Prescriptions",  icon: FileText },
   ];
 
-  const patientLinks = [
-    { to: "/patient",                    label: "Dashboard",          icon: LayoutDashboard },
-    { to: "/patient/consultations",      label: "My Consultations",   icon: ClipboardList },
-    { to: "/patient/prescriptions",      label: "My Prescriptions",   icon: FileText },
-  ];
+ const patientLinks = [
+  { to: "/patient",                   label: "Dashboard",        icon: LayoutDashboard },
+  { to: "/patient/consultations",     label: "My Consultations", icon: ClipboardList },
+  { to: "/patient/prescriptions",     label: "My Prescriptions", icon: FileText },
+  { to: "/patient/medication-alerts", label: "Medication Alerts",icon: Bell },   // ← NEW
+  { to: "/patient/chatbot",           label: "HealthBot AI",     icon: Bot },    // ← NEW
+];
 
   const adminLinks = [
     { to: "/admin",                      label: "Dashboard",          icon: LayoutDashboard },
