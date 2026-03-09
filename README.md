@@ -12,7 +12,7 @@
 
 
 
-\
+
 
 **MediTrack** is a full-stack MERN web application that digitizes medical consultations and prescriptions using a secure **role-based access system**.
 
@@ -100,4 +100,5 @@ MediTrack
 └── README.md
 ```
 
-#
+# Updated Fronted:
+
